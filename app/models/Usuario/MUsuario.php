@@ -2,8 +2,8 @@
 
 require_once('../app/models/IglesiaDB.php');
 require_once('../app/models/Usuario/Usuario.php');
-
-class MUsuario
+ 
+class MUsuario  
 {
     private IglesiaDB $database;
 
@@ -31,6 +31,7 @@ class MUsuario
             $bd->close();
         }
     }
+
 
     public function mostrarUsuarios(): array
     {
@@ -62,6 +63,30 @@ class MUsuario
 
         try {
             $query = "SELECT * FROM " . $this->database::TABLE_USUARIO . " WHERE id = ?";
+            $stmt = $bd->prepare($query);
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result && $result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $usuario = new Usuario($row['id'], $row['nombre'], $row['apellido'], $row['email'], $row['ci'], $row['cargo_id']);
+                return $usuario;
+            }
+        } catch (Exception $e) {
+            error_log("Excepción en buscarUsuario: " . $e->getMessage());
+        } finally {
+            $bd->close();
+        }
+
+        return null;
+    }
+    public function buscarUsuarioPorEmail($email)
+    {
+        $bd = $this->database->getConnection();
+
+        try {
+            $query = "SELECT * FROM " . $this->database::TABLE_USUARIO . " WHERE email = ?";
             $stmt = $bd->prepare($query);
             $stmt->bind_param("i", $id);
             $stmt->execute();
@@ -123,5 +148,13 @@ class MUsuario
             }
             $bd->close();
         }
+    }
+    public function logout($id): bool
+    {
+        return true;
+    }
+    public function login($email, $password): bool
+    {
+        return true;
     }
 }

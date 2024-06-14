@@ -28,7 +28,7 @@ class VIngreso
 
             $rowData .= "<td>{$nombreEvento}</td>";
             $rowData .= "<td><a href='/editar_ingreso?id={$ingreso->getId()}' class='edit-button'>Editar</a>";
-             $rowData .= "<form id='form_boton_eliminar' method='post' action='/eliminar_ingreso'>";
+            $rowData .= "<form id='form_boton_eliminar' method='post' action='/eliminar_ingreso'>";
             $rowData .= "<input type='hidden' name='id' value='{$ingreso->getId()}'>";
             $rowData .= "<button type='button' onclick='confirmarEliminar({$ingreso->getId()})' class='delete-button' style='font-size: 16px;'>Eliminar</button>";
             $rowData .= "</form>";
@@ -68,12 +68,21 @@ class VIngreso
                         </div>
                     </div>
                     <br>
-                    <div class="row mt-3">
+                    <div class=" ">
                         <div class="col-12 d-flex justify-content-end">
                             <button class="add-button" type="submit">Agregar</button>
                         </div>
-                    </div>
+                                             </div>
                 </form>
+                <form action="/reportes" method="post">
+        <label for="format">Selecciona el formato del reporte:</label>
+        <select name="formato" id="formato">
+            <option value="pdf">PDF</option>
+            <option value="excel">Excel</option>
+            <option value="csv">CSV</option>
+        </select>
+        <button type="submit">Generar Reporte</button>
+    </form>
             </div>
         </div>
         ';
@@ -90,40 +99,40 @@ class VIngreso
     }
 
     private function renderizarFormularioEdicion($ingreso, $eventos): string
-{
-    $formulario = '';
+    {
+        $formulario = '';
 
-    if (!empty($ingreso)) {
-        $formulario .= "<form method='post' action='/actualizar_ingreso'>";
-        $formulario .= "<input type='hidden' name='id' value='{$ingreso->getId()}'>";
+        if (!empty($ingreso)) {
+            $formulario .= "<form method='post' action='/actualizar_ingreso'>";
+            $formulario .= "<input type='hidden' name='id' value='{$ingreso->getId()}'>";
 
-        // Campo Tipo de Ingreso
-        $formulario .= "<label for='tipoIngreso'>Tipo de Ingreso:</label>";
-        $formulario .= "<input type='text' id='tipoIngreso' name='tipoIngreso' value='{$ingreso->getTipoIngreso()}' required>";
+            // Campo Tipo de Ingreso
+            $formulario .= "<label for='tipoIngreso'>Tipo de Ingreso:</label>";
+            $formulario .= "<input type='text' id='tipoIngreso' name='tipoIngreso' value='{$ingreso->getTipoIngreso()}' required>";
 
-        // Campo Monto
-        $formulario .= "<label for='monto'>Monto:</label>";
-        $formulario .= "<input type='text' id='monto' name='monto' value='{$ingreso->getMonto()}' required>";
+            // Campo Monto
+            $formulario .= "<label for='monto'>Monto:</label>";
+            $formulario .= "<input type='text' id='monto' name='monto' value='{$ingreso->getMonto()}' required>";
 
-        // Campo Evento
-        $formulario .= "<label for='evento_id'>Evento:</label>";
-        $formulario .= "<select name='evento_id' id='evento_id' required>";
-        foreach ($eventos as $evento) {
-            $selected = $evento->getId() == $ingreso->getEventoId() ? 'selected' : '';
-            $formulario .= "<option value='{$evento->getId()}' {$selected}>{$evento->getNombre()}</option>";
+            // Campo Evento
+            $formulario .= "<label for='evento_id'>Evento:</label>";
+            $formulario .= "<select name='evento_id' id='evento_id' required>";
+            foreach ($eventos as $evento) {
+                $selected = $evento->getId() == $ingreso->getEventoId() ? 'selected' : '';
+                $formulario .= "<option value='{$evento->getId()}' {$selected}>{$evento->getNombre()}</option>";
+            }
+            $formulario .= "</select>";
+
+            $formulario .= "<button type='submit'>Actualizar</button>";
+            $formulario .= "<a href='/ingresos'>Volver</a>";
+
+            $formulario .= "</form>";
+        } else {
+            $formulario .= "El ingreso no se encontró o no existe.";
         }
-        $formulario .= "</select>";
 
-        $formulario .= "<button type='submit'>Actualizar</button>";
-        $formulario .= "<a href='/ingresos'>Volver</a>";
-
-        $formulario .= "</form>";
-    } else {
-        $formulario .= "El ingreso no se encontró o no existe.";
+        return $formulario;
     }
-
-    return $formulario;
-}
 
     public function mostrarFormularioEdicion($ingreso, $eventos): void
     {

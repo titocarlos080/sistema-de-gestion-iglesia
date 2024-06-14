@@ -1,4 +1,7 @@
 <?php
+
+require_once('../vendor/autoload.php');
+
 require_once('../app/controllers/CHome.php');
 require_once('../app/controllers/CTipoRelacion.php');
 require_once('../app/controllers/CCargo.php');
@@ -6,12 +9,22 @@ require_once('../app/controllers/CEvento.php');
 require_once('../app/controllers/CUsuario.php');
 require_once('../app/controllers/CRelacion.php');
 require_once('../app/controllers/CIngreso.php');
+require_once('../app/controllers/AuthController.php');
 
 // GET requests
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($_SERVER['REQUEST_URI'] == '/') {
+        include('welcome.php');
+        return;
+    }  
+    if ($_SERVER['REQUEST_URI'] == '/login') {
+        include('login.php');
+        return;
+    } 
+    
+    if ($_SERVER['REQUEST_URI'] == '/home') {
         $home = new CHome();
-        $home->index();
+        $home->mostrarhome();
         return;
     }
 
@@ -98,16 +111,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $ingreso->updateIngreso($id);
         return;
     }
+
+
 }
 
 // POST requests
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
+    if ($_SERVER['REQUEST_URI'] == '/obtener/versiculos') {
+        $controllerHome = new CHome();
+         $controllerHome->obtenerVersiculos($_POST['libro']);
+       return;
+    }   
+    
+    if ($_SERVER['REQUEST_URI'] == '/login') {
+        $auth = new AuthController();
+        $auth->login($_POST['email'], $_POST['password']);
+        return;
+    } 
+    if ($_SERVER['REQUEST_URI'] == '/logout') {
+        $auth = new AuthController();
+        $auth->logout($_POST['id']);
+        return;
+    }
+
+
+
     if ($_SERVER['REQUEST_URI'] == '/cargos') {
         $cargo = new CCargo();
         $cargo->agregarCargo($_POST['nombre'], $_POST['descripcion']);
         return;
     }
-
+  
     if ($_SERVER['REQUEST_URI'] == '/eliminar_cargo') {
         $cargo = new CCargo();
         $cargo->eliminarCargo($_POST['id']);
@@ -210,20 +245,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return;
     }
    
+     
     if ($_SERVER['REQUEST_URI'] == '/reportes') {
-
-        $reporte = new ReporteContext();
-        if ("pdf" == $_POST["tipo"]) {
-            $reporte->setStrategy(new  ReportePDF());
-            # code...
+        if (isset($_POST['formato'])) {
+            $formato = $_POST['formato'];
+            $ingreso = new CIngreso();
+            $ingreso->reporte($formato);
+         } else {
+            echo "No se ha enviado ningún formato.";
         }
-        if ("excel" == $_POST["tipo"]) {
-            $reporte->setStrategy(new  ReporteExcel());
-            # code...
-        }
-
-        $reporte->generarReporte($_POST["data"]);
     }
+    
 
 
 

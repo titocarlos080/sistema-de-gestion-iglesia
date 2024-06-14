@@ -125,4 +125,31 @@ class MIngreso
             $bd->close();
         }
     }
+
+    public function generarReportes(): array
+    {
+
+        $bd = $this->database->getConnection();
+
+        $ingresos = [];
+
+        try {
+            $result = $bd->query('select ingresos.id, ingresos.tipo_ingreso,ingresos.monto,eventos.nombre as evento 
+                                        from ingresos, eventos
+                                            where ingresos.evento_id = eventos.id');
+
+            if ($result) {
+                while ($row = $result->fetch_assoc()) {
+                    $ingreso = new Ingreso($row['id'], $row['tipo_ingreso'], $row['monto'], $row['evento']);
+                    $ingresos[] = $ingreso;
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Excepción en mostrarIngresos: " . $e->getMessage());
+        } finally {
+            $bd->close();
+        }
+
+        return $ingresos;
+    }
 }

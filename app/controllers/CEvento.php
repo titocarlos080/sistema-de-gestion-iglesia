@@ -56,4 +56,6 @@ class CEvento
         $usuarios = $this->modeloUsuario->mostrarUsuarios();
         $this->vista->mostrarFormularioEdicion($evento, $usuarios);
     }
+
+    
 }

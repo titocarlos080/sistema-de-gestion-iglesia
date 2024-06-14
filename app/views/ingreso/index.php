@@ -11,22 +11,23 @@
  <body>
      <div class="content">
 
-     <div class="container">
-     <h1><?= $title ?></h1>
-     <?= $formulario ?>
-     <table>
-         <thead>
-             <tr>
-                 <th>Id</th>
-                 <th>Tipo de Ingreso</th>
-                 <th>Monto (Bs)</th>
-                 <th>Evento</th>
-                 <th>Acciones</th>
-             </tr>
-         </thead>
-         <?= $tbody ?>
-     </table>
- </div>
+         <div class="container">
+             <h1><?= $title ?></h1>
+             <?= $formulario ?>
+
+             <table>
+                 <thead>
+                     <tr>
+                         <th>Id</th>
+                         <th>Tipo de Ingreso</th>
+                         <th>Monto (Bs)</th>
+                         <th>Evento</th>
+                         <th>Acciones</th>
+                     </tr>
+                 </thead>
+                 <?= $tbody ?>
+             </table>
+         </div>
 
 
      </div>
@@ -51,7 +52,5 @@
          }
      }
  </script>
+
  </html>
-
-
-

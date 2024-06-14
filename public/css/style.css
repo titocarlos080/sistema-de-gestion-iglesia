@@ -165,3 +165,27 @@ table tr td:last-child {
   text-align: center;
   max-width: 300px;
 }
+
+ 
+.content-card {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.content-form div input {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+  height: 40px;
+  background: #fff;
+}
+
+.card {
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  z-index: 1;
+  cursor: pointer;
+  transform: scale(1.05);
+}
